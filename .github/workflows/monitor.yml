@@ -1,0 +1,30 @@
+name: News Monitor
+on:
+  schedule:
+    - cron: '*/10 * * * *' # 10분마다 실행
+  workflow_dispatch: # 수동 실행 버튼
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 기록 저장을 위해 필요
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 python-telegram-bot
+      - name: Run Bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python bot.py
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          git add last_link.txt || true
+          git commit -m "Update last link" || exit 0
+          git push
