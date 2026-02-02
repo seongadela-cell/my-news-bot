@@ -28,9 +28,9 @@ async def main():
         last_link_file = "last_link.txt"
         if os.path.exists(last_link_file):
             with open(last_link_file, "r") as f:
-                if f.read().strip() == post_url:
-                    print("새로운 글이 없습니다.")
-                    return
+               # if f.read().strip() == post_url:
+                   # print("새로운 글이 없습니다.")
+                   # return
 
         # 본문 페이지 접속 및 추출
         post_res = requests.get(post_url, headers=headers)
